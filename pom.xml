@@ -156,6 +156,16 @@
       <artifactId>azure-identity</artifactId>
       <version>1.12.2</version>
     </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.30</version>
+    </dependency>
+  <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-identity-extensions</artifactId>
+      <version>1.1.5</version>
+  </dependency>
   </dependencies>
   
 
