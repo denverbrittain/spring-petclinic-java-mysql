@@ -6,15 +6,12 @@
 * [Managed Identity](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview) for passwordless secure connections. 
 * [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview)
 
-This application uses the [Azure Developer CLI (azd)](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/overview)
-to get you up and running on Azure quickly.
-
 ## Prerequisites
 
 The following prerequisites are required to use this application. Please ensure that you have them all installed locally.
 
 * [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
-* Java 17 or later
+* Java 11 or later
 
 ## Tutorial
 
