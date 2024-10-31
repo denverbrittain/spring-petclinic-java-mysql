@@ -15,4 +15,4 @@ The following prerequisites are required to use this application. Please ensure 
 
 ## Tutorial
 
-A video tutorial is in progress, a blog post tutorial for this application can be found [here]https://techcommunity.microsoft.com/t5/apps-on-azure-blog/deploy-intelligent-springboot-apps-using-azure-openai-and-azure/ba-p/4257130).
+A video tutorial is in progress, a blog post tutorial for this application can be found [here](https://techcommunity.microsoft.com/t5/apps-on-azure-blog/deploy-intelligent-springboot-apps-using-azure-openai-and-azure/ba-p/4257130).
