@@ -1,8 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 
-name: spring-petclinic
-metadata:
-  template: spring-petclinic-azure-mysql@0.0.1-SNAPSHOT
+name: spring-petclinic-appservice-ai
 services:
   petclinic:
     project: .

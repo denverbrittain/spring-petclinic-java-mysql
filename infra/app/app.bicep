@@ -37,7 +37,7 @@ module app '../core/host/appservice.bicep' = {
       })
     keyVaultName: keyVaultName
     runtimeName: 'java'
-    runtimeVersion: '17-java17'
+    runtimeVersion: '11-java11'
     scmDoBuildDuringDeployment: true
   }
 }

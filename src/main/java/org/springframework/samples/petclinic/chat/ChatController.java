@@ -12,6 +12,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 import com.azure.ai.openai.OpenAIClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
@@ -32,6 +34,9 @@ import com.azure.core.credential.TokenCredential;
 @Controller
 public class ChatController {
 
+	@Autowired
+    private Environment env;
+
 	@MessageMapping("/chat.sendMessageAI")
 	@SendTo("/topic/public")
 	public LocalChatMessage sendMessageAI(@Payload LocalChatMessage localChatMessage) {
@@ -39,7 +44,7 @@ public class ChatController {
 
 		TokenCredential defaultCredential = new DefaultAzureCredentialBuilder().build();
 		OpenAIClient client = new OpenAIClientBuilder().credential(defaultCredential)
-				.endpoint("https://java-demo.openai.azure.com/").buildClient();
+				.endpoint(env.getProperty("OPENAI_DEPLOYMENT_NAME")).buildClient();
 
 		List<ChatRequestMessage> chatMessages = new ArrayList<>();
 

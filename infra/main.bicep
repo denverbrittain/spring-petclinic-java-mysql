@@ -45,7 +45,7 @@ module appServicePlan './core/host/appserviceplan.bicep' = {
     location: location
     tags: tags
     sku: {
-      name: 'B1'
+      name: 'P0v3'
     }
   }
 }
@@ -120,6 +120,69 @@ module appKeyVaultAccess './core/security/keyvault-access.bicep' = {
     principalId: app.outputs.APP_IDENTITY_PRINCIPAL_ID
   }
 }
+
+
+@description('Location for the OpenAI resource group')
+@allowed(['australiaeast', 'canadaeast', 'eastus', 'eastus2', 'francecentral', 'japaneast', 'northcentralus', 'swedencentral', 'switzerlandnorth', 'uksouth', 'westeurope'])
+@metadata({
+  azd: {
+    type: 'location'
+  }
+})
+param openAiLocation string // Set in main.parameters.json
+
+// FIRST: creating Azure Cognitive Services account for OpenAI
+module openAi1 'core/openai/openai.bicep' = {
+  name: 'openai1'
+  scope: rg
+  params: {
+    name: 'openai-resource-springai-01'
+    location: openAiLocation
+    tags: tags
+    sku: {
+      name: 'S0'
+    }
+    disableLocalAuth: true
+    deployments: [
+      {
+        name: 'gpt-35-turbo-model'
+        raiPolicyName: 'Microsoft.Default'
+        model: {
+          format: 'OpenAI'
+          name: 'gpt-35-turbo'
+          version: '0613'
+        }
+        sku: {
+          name: 'Standard'
+          capacity: 2
+        }
+      }
+    ]
+  }
+}
+
+// Roles
+
+// Assign the role (to Cog service account 1), a role entry is added to Cognitive Services account with the following args: 
+// - roleDefinitionId (Cognitive Service User), 
+// - principalId (app service instance) 
+// - scope (Cognitive Services account)
+module openAi1RoleAppService 'core/security/role.bicep' = {
+  scope: rg
+  name: 'openai1-role-appservice'
+  params: {
+    principalId: app.outputs.APP_IDENTITY_PRINCIPAL_ID
+    // Cognitive Services OpenAI User
+    roleDefinitionId: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
+    principalType: 'ServicePrincipal'
+  }
+}
+
+
+
+output AZURE_RESOURCE_GROUP string = rg.name
+output DEPLOYMENT_ID string = 'gpt-35-turbo-model'
+output OPENAI_DEPLOYMENT_NAME string = openAi1.outputs.endpoint
 
 // Data outputs
 output MYSQL_URL string = mySql.outputs.endpoint
