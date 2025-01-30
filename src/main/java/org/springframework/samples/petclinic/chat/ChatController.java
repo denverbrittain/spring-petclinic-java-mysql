@@ -35,7 +35,7 @@ import com.azure.core.credential.TokenCredential;
 public class ChatController {
 
 	@Autowired
-    private Environment env;
+	private Environment env;
 
 	@MessageMapping("/chat.sendMessageAI")
 	@SendTo("/topic/public")
@@ -54,7 +54,7 @@ public class ChatController {
 
 		chatMessages.add(new ChatRequestUserMessage(s));
 
-		String deploymentName = "gpt-35-turbo-model";
+		String deploymentName = "gpt-4o-model";
 		ChatCompletions chatCompletions = client.getChatCompletions(deploymentName,
 				new ChatCompletionsOptions(chatMessages));
 		String response = "";

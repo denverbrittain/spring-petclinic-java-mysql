@@ -145,12 +145,11 @@ module openAi1 'core/openai/openai.bicep' = {
     disableLocalAuth: true
     deployments: [
       {
-        name: 'gpt-35-turbo-model'
+        name: 'gpt-4o-model'
         raiPolicyName: 'Microsoft.Default'
         model: {
           format: 'OpenAI'
-          name: 'gpt-35-turbo'
-          version: '0613'
+          name: 'gpt-4o'
         }
         sku: {
           name: 'Standard'
@@ -180,13 +179,16 @@ module openAi1RoleAppService 'core/security/role.bicep' = {
 
 
 
+
+
 output AZURE_RESOURCE_GROUP string = rg.name
-output DEPLOYMENT_ID string = 'gpt-35-turbo-model'
+output DEPLOYMENT_ID string = 'gpt-4o-model'
 output OPENAI_DEPLOYMENT_NAME string = openAi1.outputs.endpoint
 
 // Data outputs
 output MYSQL_URL string = mySql.outputs.endpoint
 output MYSQL_USER string = mySqlServerAdminName
+output WEBSITES_PORT int = 8080
 
 // App outputs
 output APPLICATIONINSIGHTS_CONNECTION_STRING string = monitoring.outputs.applicationInsightsConnectionString

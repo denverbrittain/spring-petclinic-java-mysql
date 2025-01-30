@@ -166,6 +166,11 @@
       <artifactId>azure-identity-extensions</artifactId>
       <version>1.1.5</version>
   </dependency>
+    <dependency>
+        <groupId>com.azure.spring</groupId>
+        <artifactId>spring-cloud-azure-starter-keyvault-secrets</artifactId>
+        <version>4.19.0</version>
+    </dependency>
   </dependencies>
   
 
