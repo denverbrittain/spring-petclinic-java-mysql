@@ -1,3 +1,4 @@
+/*
 @description('Server Name for Azure database for MySQL')
 param name string
 @description('Location for all resources.')
@@ -119,3 +120,4 @@ output adminName string = adminName
 output adminPasswordKey string = adminPasswordKey
 output fullyQualifiedDomainName string = server.properties.fullyQualifiedDomainName
 output endpoint string = 'jdbc:mysql://${server.properties.fullyQualifiedDomainName}:3306/?useSSL=true&requireSSL=false'
+*/

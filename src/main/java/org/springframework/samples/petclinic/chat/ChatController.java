@@ -42,6 +42,8 @@ public class ChatController {
 	public LocalChatMessage sendMessageAI(@Payload LocalChatMessage localChatMessage) {
 		// sendMessage(localChatMessage);
 
+		System.out.println("Deployment name is: " + env.getProperty("OPENAI_DEPLOYMENT_NAME"));
+
 		TokenCredential defaultCredential = new DefaultAzureCredentialBuilder().build();
 		OpenAIClient client = new OpenAIClientBuilder().credential(defaultCredential)
 				.endpoint(env.getProperty("OPENAI_DEPLOYMENT_NAME")).buildClient();

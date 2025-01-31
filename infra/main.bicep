@@ -13,17 +13,21 @@ param appName string = ''
 param applicationInsightsDashboardName string = ''
 param applicationInsightsName string = ''
 param appServicePlanName string = ''
-param mySqlServerName string = ''
-param mySqlServerAdminName string = 'petclinic'
 @secure()
-param mySqlServerAdminPassword string
-param mySqlDatabaseName string = 'petclinic'
 param keyVaultName string = ''
 param logAnalyticsName string = ''
 param resourceGroupName string = ''
 
 @description('Id of the user or app to assign application roles')
 param principalId string = ''
+/*param managedIdentityName string = ''
+
+// Create a User-Assigned Managed Identity
+resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2021-09-30' = {
+  name: managedIdentityName
+  location: location
+}
+*/
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
@@ -75,8 +79,18 @@ module keyVault './core/security/keyvault.bicep' = {
   }
 }
 
+// Store secrets in a keyvault
+module managedidentity './core/security/managedidentity.bicep' = {
+  name: 'managedidentity'
+  scope: rg
+  params: {
+    location: location
+    tags: tags
+  }
+}
+
 // The application database
-module mySql './core/database/mysql/mysql-db.bicep' = {
+/*module mySql './core/database/mysql/mysql-db.bicep' = {
   name: 'mysql-db'
   scope: rg
   params: {
@@ -88,7 +102,7 @@ module mySql './core/database/mysql/mysql-db.bicep' = {
     databaseName: !empty(mySqlDatabaseName) ? mySqlDatabaseName : 'petclinic'
     keyVaultName: keyVault.outputs.name
   }
-}
+}*/
 
 // The application backend
 module app './app/app.bicep' = {
@@ -104,9 +118,10 @@ module app './app/app.bicep' = {
     appSettings: {
       APPLICATIONINSIGHTS_CONNECTION_STRING: monitoring.outputs.applicationInsightsConnectionString
       AZURE_KEY_VAULT_ENDPOINT: keyVault.outputs.endpoint
-      SPRING_PROFILES_ACTIVE: 'azure,mysql'
-      MYSQL_URL: mySql.outputs.endpoint
-      MYSQL_USER: mySqlServerAdminName
+      SPRING_PROFILES_ACTIVE: 'azure,h2'
+      OPENAI_DEPLOYMENT_NAME: openAi1.outputs.openaiendpoint
+      //MYSQL_URL: mySql.outputs.endpoint
+      //MYSQL_USER: mySqlServerAdminName
     }
   }
 }
@@ -160,6 +175,7 @@ module openAi1 'core/openai/openai.bicep' = {
   }
 }
 
+
 // Roles
 
 // Assign the role (to Cog service account 1), a role entry is added to Cognitive Services account with the following args: 
@@ -179,15 +195,12 @@ module openAi1RoleAppService 'core/security/role.bicep' = {
 
 
 
-
-
 output AZURE_RESOURCE_GROUP string = rg.name
 output DEPLOYMENT_ID string = 'gpt-4o-model'
-output OPENAI_DEPLOYMENT_NAME string = openAi1.outputs.endpoint
-
+output OPENAI_DEPLOYMENT_NAME string = openAi1.outputs.openaiendpoint
 // Data outputs
-output MYSQL_URL string = mySql.outputs.endpoint
-output MYSQL_USER string = mySqlServerAdminName
+//output MYSQL_URL string = mySql.outputs.endpoint
+//output MYSQL_USER string = mySqlServerAdminName
 output WEBSITES_PORT int = 8080
 
 // App outputs
@@ -196,4 +209,4 @@ output AZURE_KEY_VAULT_ENDPOINT string = keyVault.outputs.endpoint
 output AZURE_KEY_VAULT_NAME string = keyVault.outputs.name
 output AZURE_LOCATION string = location
 output AZURE_TENANT_ID string = tenant().tenantId
-output SPRING_PROFILES_ACTIVE string = 'azure,mysql'
+output SPRING_PROFILES_ACTIVE string = 'azure,h2'
